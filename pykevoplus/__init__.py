@@ -19,7 +19,7 @@ class Kevo(object):
     Common mykevo.com operations
     """
 
-    KEVO_URL_BASE = "https://mykevo.com"
+    KEVO_URL_BASE = "https://www.mykevo.com"
     COMMANDS_URL_BASE = KEVO_URL_BASE + "/user/remote_locks/command"
 
     START_URL = KEVO_URL_BASE + "/login"
