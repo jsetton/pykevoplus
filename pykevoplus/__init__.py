@@ -24,6 +24,7 @@ class Kevo(object):
 
     START_URL = KEVO_URL_BASE + "/login"
     LOGIN_URL = KEVO_URL_BASE + "/signin"
+    LOCKS_URL = KEVO_URL_BASE + "/user/locks"
 
     @staticmethod
     def GetAuthToken(session):
@@ -63,8 +64,7 @@ class Kevo(object):
             "user[password]" : password,
             "authenticity_token" : token
         }
-        result = session.post(Kevo.LOGIN_URL, login_payload)
-        return result
+        session.post(Kevo.LOGIN_URL, login_payload)
 
     @staticmethod
     def GetLocks(username, password):
@@ -80,7 +80,8 @@ class Kevo(object):
         """
         locks = []
         with requests.Session() as session:
-            result = Kevo.Login(session, username, password)
+            Kevo.Login(session, username, password)
+            result = session.get(Kevo.LOCKS_URL)
             lock_page = BeautifulSoup(result.text, "html.parser")
             for lock in lock_page.find_all("ul", "lock"):
                 lock_info = lock.find("div", class_="lock_unlock_container")
@@ -92,7 +93,7 @@ class Kevo(object):
         return locks
 
 def _manage_session(method):
-    """ 
+    """
     Decorator to handle the HTTP session to mykevo.com
     This allows methods in KevoLock to not have to manage auth sessions themselves
     """
